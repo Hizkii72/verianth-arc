@@ -1,0 +1,92 @@
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+    margin: 0;
+    font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.font-heading { font-family: 'Outfit', 'Plus Jakarta Sans', sans-serif; }
+.font-mono-num { font-family: 'JetBrains Mono', monospace; }
+
+@layer base {
+    :root {
+        --background: 210 33% 98%;
+        --foreground: 222 47% 11%;
+        --card: 0 0% 100%;
+        --card-foreground: 222 47% 11%;
+        --popover: 0 0% 100%;
+        --popover-foreground: 222 47% 11%;
+        --primary: 199 100% 59%;
+        --primary-foreground: 210 60% 6%;
+        --secondary: 210 40% 96%;
+        --secondary-foreground: 222 47% 11%;
+        --muted: 210 40% 96%;
+        --muted-foreground: 215 16% 47%;
+        --accent: 199 100% 59%;
+        --accent-foreground: 210 60% 6%;
+        --destructive: 0 84% 60%;
+        --destructive-foreground: 0 0% 98%;
+        --border: 214 32% 91%;
+        --input: 214 32% 91%;
+        --ring: 199 100% 59%;
+        --radius: 0.75rem;
+    }
+    .dark {
+        --background: 222 47% 6%;
+        --foreground: 210 40% 98%;
+        --card: 222 47% 9%;
+        --card-foreground: 210 40% 98%;
+        --popover: 222 47% 9%;
+        --popover-foreground: 210 40% 98%;
+        --primary: 199 100% 59%;
+        --primary-foreground: 210 60% 6%;
+        --secondary: 217 33% 17%;
+        --secondary-foreground: 210 40% 98%;
+        --muted: 217 33% 15%;
+        --muted-foreground: 215 20% 65%;
+        --accent: 199 100% 59%;
+        --accent-foreground: 210 60% 6%;
+        --destructive: 0 63% 45%;
+        --destructive-foreground: 0 0% 98%;
+        --border: 217 33% 17%;
+        --input: 217 33% 17%;
+        --ring: 199 100% 59%;
+    }
+}
+
+@layer base {
+    * { @apply border-border; }
+    body { @apply bg-background text-foreground; }
+}
+
+/* Aqua accent */
+:root { --aqua: #2cc0ff; --aqua-ink: #04111d; }
+
+.aqua-btn {
+    background: var(--aqua);
+    color: var(--aqua-ink);
+    font-weight: 600;
+    transition: transform 0.1s ease, box-shadow 0.2s ease, background-color 0.2s;
+}
+.aqua-btn:hover { background: #22a3db; }
+.aqua-btn:active { transform: scale(0.98); }
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: hsl(var(--border)); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: hsl(var(--muted-foreground) / 0.5); }
+
+/* Hide date picker default UI */
+input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(0.5);
+    cursor: pointer;
+}
+.dark input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(0.9);
+}

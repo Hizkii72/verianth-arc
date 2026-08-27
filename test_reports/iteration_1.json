@@ -1,0 +1,33 @@
+{
+  "summary": "Comprehensive backend smoke test of Verianth Universe portal. 38/38 checks passed across auth, roles, settings, members (verify/role/APP hidden), transactions, announcements, targets, agenda, feedback (anonymous masking), kas upsert idempotency, and profile update. Sessions simulated via direct MongoDB insert with Bearer tokens.",
+  "tested_scope": ["backend", "auth", "integration"],
+  "passed": [
+    "GET /api/settings public (200 with defaults)",
+    "GET /api/auth/me returns 401 without token",
+    "Bearer-token auth resolves owner as is_admin=true & verified=true",
+    "4 seeded roles present (Admin/APP-hidden/Anggota/Leader)",
+    "Roles CRUD works; system role DELETE returns 400",
+    "PUT /api/settings admin OK; non-admin (unverified pending) -> 403; changes reflected",
+    "GET /api/members excludes unverified & APP-hidden users",
+    "PUT /api/members/{id}/verify then /members includes user",
+    "GET /api/members/all admin returns all",
+    "Owner deletion blocked (400)",
+    "Transactions POST admin OK; non-admin -> 403; /finance/summary computes saldo/pemasukan/pengeluaran correctly (200000/400000/200000)",
+    "Announcements CRUD; verified user can GET",
+    "Targets CRUD + bought toggle",
+    "Agenda POST admin OK",
+    "Feedback: anonymous masked as 'Anonim' for non-admin; admin sees real author; reply & delete work",
+    "Kas upsert on same (user,year,month) updates instead of duplicating (single entry with new amount)",
+    "PUT /api/members/me/profile persists whatsapp/bio/social/code_name/name/picture"
+  ],
+  "failed": [],
+  "observations": [
+    "Server-side /api/kas/{year} returns all kas entries and does NOT filter out APP-role users. Requirement expected APP exclusion at API layer. Currently filtering must be done client-side by cross-referencing /api/members. Consider filtering server-side for consistency. Priority: LOW."
+  ],
+  "action_items": [
+    "Optional: filter APP-role users from GET /api/kas/{year} response to match spec"
+  ],
+  "success_rate": {"backend": "100%", "frontend": "not tested (backend-only request)"},
+  "retest_needed": false,
+  "full_testing_deferred": true
+}

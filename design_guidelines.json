@@ -1,0 +1,498 @@
+{
+  "project_name": "Verianth Universe - Community Portal",
+  "archetype": "Modern Minimalist Futuristic Cyber-Crystal (Archetype 2 / Swiss-Tactical Hybrid)",
+  "theme_strategy": {
+    "default_mode": "system_preference_with_toggle",
+    "theme_toggle_location": "Header top-right & Sidebar bottom controls",
+    "dark_mode": {
+      "bg_primary": "#080d1a",
+      "bg_surface": "#0f172a",
+      "bg_surface_elevated": "#1e293b",
+      "bg_sidebar": "#0b1120",
+      "border_subtle": "rgba(255, 255, 255, 0.08)",
+      "border_accent": "rgba(44, 192, 255, 0.3)",
+      "text_primary": "#f8fafc",
+      "text_secondary": "#94a3b8",
+      "text_muted": "#64748b",
+      "card_shadow": "0 8px 32px -4px rgba(0, 0, 0, 0.5), 0 2px 6px -1px rgba(0, 0, 0, 0.3)",
+      "glow_accent": "0 0 24px -4px rgba(44, 192, 255, 0.25)"
+    },
+    "light_mode": {
+      "bg_primary": "#f8fafc",
+      "bg_surface": "#ffffff",
+      "bg_surface_elevated": "#f1f5f9",
+      "bg_sidebar": "#ffffff",
+      "border_subtle": "rgba(15, 23, 42, 0.08)",
+      "border_accent": "rgba(44, 192, 255, 0.5)",
+      "text_primary": "#0f172a",
+      "text_secondary": "#475569",
+      "text_muted": "#94a3b8",
+      "card_shadow": "0 10px 25px -5px rgba(15, 23, 42, 0.05), 0 8px 10px -6px rgba(15, 23, 42, 0.03)",
+      "glow_accent": "0 0 20px -3px rgba(44, 192, 255, 0.2)"
+    }
+  },
+  "brand_colors": {
+    "primary_aqua": "#2cc0ff",
+    "primary_aqua_hover": "#22a3db",
+    "primary_aqua_active": "#1b8fc4",
+    "primary_aqua_light": "#e0f6ff",
+    "primary_aqua_tint_dark": "rgba(44, 192, 255, 0.12)",
+    "primary_aqua_tint_light": "rgba(44, 192, 255, 0.08)",
+    "primary_aqua_contrast_text": "#04111d",
+    "status": {
+      "success": "#10b981",
+      "warning": "#f59e0b",
+      "error": "#ef4444",
+      "info": "#3b82f6",
+      "purple": "#a855f7"
+    }
+  },
+  "chart_color_schemes": {
+    "pemasukan_donut": {
+      "Kas": "#2cc0ff",
+      "Support": "#a855f7",
+      "Hasil Project": "#06b6d4",
+      "Lainnya": "#64748b"
+    },
+    "pengeluaran_donut": {
+      "Langganan": "#3b82f6",
+      "Target": "#ef4444",
+      "Event": "#10b981",
+      "Lainnya": "#f59e0b"
+    },
+    "line_chart_trends": {
+      "pemasukan_stroke": "#2cc0ff",
+      "pemasukan_gradient_stop": "rgba(44, 192, 255, 0.25)",
+      "pengeluaran_stroke": "#f43f5e",
+      "pengeluaran_gradient_stop": "rgba(244, 63, 94, 0.25)"
+    }
+  },
+  "typography": {
+    "font_families": {
+      "heading": "'Outfit', 'Plus Jakarta Sans', sans-serif",
+      "body": "'Plus Jakarta Sans', sans-serif",
+      "mono_numerical": "'JetBrains Mono', monospace"
+    },
+    "google_fonts_import": "https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap",
+    "scale": {
+      "h1_hero": "text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight font-heading",
+      "h2_section": "text-2xl sm:text-3xl font-bold tracking-tight font-heading",
+      "h3_card": "text-lg sm:text-xl font-semibold tracking-tight font-heading",
+      "h4_label": "text-sm font-semibold tracking-wide uppercase font-heading",
+      "body_large": "text-base font-normal leading-relaxed font-body",
+      "body_regular": "text-sm font-normal leading-normal font-body",
+      "body_small": "text-xs font-normal text-muted-foreground font-body",
+      "currency_large": "text-2xl sm:text-3xl font-bold font-mono tracking-tight",
+      "currency_regular": "text-base sm:text-lg font-semibold font-mono tracking-tight",
+      "currency_badge": "text-xs font-semibold font-mono"
+    }
+  },
+  "spacing_and_layout": {
+    "layout_mode": "Responsive App Dashboard with Fixed Left Sidebar (280px) and Top Global Header (64px)",
+    "container_padding": "p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto space-y-6 sm:space-y-8",
+    "card_padding": "p-5 sm:p-6",
+    "border_radius": {
+      "pill": "rounded-full",
+      "card": "rounded-2xl",
+      "widget": "rounded-xl",
+      "button": "rounded-xl",
+      "input": "rounded-lg"
+    },
+    "grid_layouts": {
+      "dashboard_metrics": "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6",
+      "finance_charts": "grid grid-cols-1 lg:grid-cols-12 gap-6",
+      "finance_line_span": "lg:col-span-12",
+      "finance_donut_span": "lg:col-span-6",
+      "member_cards": "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6",
+      "target_cards": "grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6",
+      "agenda_grid": "grid grid-cols-1 lg:grid-cols-12 gap-6"
+    }
+  },
+  "sidebar_specifications": {
+    "style": "Modern Minimalist Clean Docked Panel with Solid Aqua Highlight Pill",
+    "active_item_style": {
+      "background": "bg-[#2cc0ff]",
+      "text_color": "text-[#04111d] font-bold",
+      "icon_color": "text-[#04111d]",
+      "shadow": "shadow-[0_4px_16px_rgba(44,192,255,0.35)]",
+      "border_radius": "rounded-xl",
+      "transition": "transition-all duration-200 ease-in-out"
+    },
+    "inactive_item_style": {
+      "background": "hover:bg-slate-100 dark:hover:bg-slate-800/60 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100",
+      "border_radius": "rounded-xl",
+      "transition": "transition-colors duration-150 ease"
+    },
+    "navigation_items": [
+      {
+        "id": "admin",
+        "label": "Ruang Admin",
+        "icon": "ShieldAlert",
+        "test_id": "nav-item-admin",
+        "badge": "Admin Only"
+      },
+      {
+        "id": "dashboard",
+        "label": "Dashboard",
+        "icon": "LayoutDashboard",
+        "test_id": "nav-item-dashboard"
+      },
+      {
+        "id": "keuangan",
+        "label": "Keuangan",
+        "icon": "WalletCards",
+        "test_id": "nav-item-keuangan"
+      },
+      {
+        "id": "pengumuman",
+        "label": "Pengumuman",
+        "icon": "Megaphone",
+        "test_id": "nav-item-pengumuman"
+      },
+      {
+        "id": "anggota",
+        "label": "Anggota",
+        "icon": "Users",
+        "test_id": "nav-item-anggota"
+      },
+      {
+        "id": "target",
+        "label": "Target Komunitas",
+        "icon": "Target",
+        "test_id": "nav-item-target"
+      },
+      {
+        "id": "agenda",
+        "label": "Agenda",
+        "icon": "CalendarDays",
+        "test_id": "nav-item-agenda"
+      },
+      {
+        "id": "masukan",
+        "label": "Masukan",
+        "icon": "MessageSquareQuote",
+        "test_id": "nav-item-masukan"
+      }
+    ],
+    "bottom_note_widget": {
+      "description": "Small customizable announcement/reminder card placed directly above the Logout button, editable in Ruang Admin > Pengaturan Web",
+      "style": "p-3.5 rounded-xl border border-dashed border-[#2cc0ff]/40 bg-[#2cc0ff]/5 text-xs leading-relaxed text-slate-700 dark:text-slate-300 backdrop-blur-sm",
+      "icon": "Sparkles",
+      "test_id": "sidebar-admin-note"
+    }
+  },
+  "header_specifications": {
+    "structure": "Fixed/Sticky 64px glassmorphism bar (backdrop-blur-xl bg-white/80 dark:bg-[#0b1120]/80 border-b border-slate-200/60 dark:border-slate-800/80 z-40)",
+    "left_content": {
+      "logo": "Verianth Universe Emblem/Logo adjacent to brand name",
+      "community_name": "Verianth Universe",
+      "tagline": "Dynamic tagline configured in Ruang Admin",
+      "badge": "Verified Community"
+    },
+    "right_content": {
+      "theme_toggle": "Sun/Moon icon button with smooth flip",
+      "notification_bell": "Indicator badge for pending admin approvals & new announcements",
+      "user_profile_dropdown": "Avatar with online indicator, WhatsApp shortcut, profile edit trigger, and logout"
+    }
+  },
+  "currency_formatting_rules": {
+    "display_format": "Rp[Nominal_Tiga_Digit_Bertitik] (contoh: Rp1.000.000, Rp250.000, Rp50.000)",
+    "input_rule": "Real-time auto-formatting as user types numbers (strips non-digits, formats with dots every 3 digits, prefixes Rp)",
+    "helper_methods": {
+      "formatRupiah": "export const formatRupiah = (number) => 'Rp' + (Number(number) || 0).toLocaleString('id-ID');",
+      "parseRupiah": "export const parseRupiah = (str) => Number(String(str).replace(/[^0-9]/g, '')) || 0;"
+    }
+  },
+  "core_pages_and_modules": {
+    "dashboard": {
+      "title": "Ringkasan Komunitas",
+      "widgets": [
+        {
+          "name": "Saldo Kas Saat Ini",
+          "highlight": true,
+          "color": "#2cc0ff",
+          "test_id": "widget-saldo-kas"
+        },
+        {
+          "name": "Total Pemasukan",
+          "color": "#10b981",
+          "test_id": "widget-total-pemasukan"
+        },
+        {
+          "name": "Total Pengeluaran",
+          "color": "#ef4444",
+          "test_id": "widget-total-pengeluaran"
+        },
+        {
+          "name": "Transaksi Kas Terbaru",
+          "type": "Interactive Table with Badge Filter",
+          "test_id": "widget-recent-transactions"
+        },
+        {
+          "name": "Pengumuman Terbaru",
+          "type": "Pinned Feed Card",
+          "test_id": "widget-latest-announcement"
+        }
+      ]
+    },
+    "keuangan": {
+      "title": "Pencatatan Kas & Grafik Keuangan",
+      "actions": [
+        "Tambah Catatan Kas (Modal with real-time Rp formatter & Kategori selector)",
+        "Filter Rentang Waktu (Bulan Ini, Tahun Ini, Semua)",
+        "Export CSV / Print Laporan"
+      ],
+      "charts": [
+        {
+          "type": "Line Chart (Tren Pemasukan vs Pengeluaran)",
+          "x_axis": "Bulan/Tanggal",
+          "series": ["Pemasukan (#2cc0ff)", "Pengeluaran (#f43f5e)"],
+          "style": "Smooth curve area with subtle gradient fill"
+        },
+        {
+          "type": "Donut Chart 1 (Pemasukan Per Kategori)",
+          "categories": ["Kas (#2cc0ff)", "Support (#a855f7)", "Hasil Project (#06b6d4)", "Lainnya (#64748b)"]
+        },
+        {
+          "type": "Donut Chart 2 (Pengeluaran Per Kategori)",
+          "categories": ["Langganan (#3b82f6)", "Target (#ef4444)", "Event (#10b981)", "Lainnya (#f59e0b)"]
+        }
+      ]
+    },
+    "ruang_admin": {
+      "title": "Ruang Kendali Admin",
+      "access_control": "Admin/APP Role verification required",
+      "tabs": [
+        {
+          "id": "pengaturan_web",
+          "label": "Pengaturan Website",
+          "fields": [
+            "Nama Komunitas",
+            "Tagline Header",
+            "Catatan Sidebar (Bawah)",
+            "Target Kas Bulanan Per Anggota (Rp)",
+            "Logo URL / Upload"
+          ],
+          "test_id": "admin-tab-settings"
+        },
+        {
+          "id": "role_management",
+          "label": "Manajemen Role",
+          "features": [
+            "Add New Role",
+            "Delete Role",
+            "Custom Border Color Picker for Role Badges",
+            "Hidden 'APP' Role Indicator (System protected, cannot be deleted)",
+            "Role permissions matrix"
+          ],
+          "test_id": "admin-tab-roles"
+        },
+        {
+          "id": "verifikasi_anggota",
+          "label": "Verifikasi Anggota Baru",
+          "features": [
+            "List Pending Member Registrations",
+            "Preview Name, Email, WhatsApp, Avatar",
+            "Approve button (sets role and activates)",
+            "Reject button with reason note"
+          ],
+          "test_id": "admin-tab-verification"
+        },
+        {
+          "id": "capaian_kas_anggota",
+          "label": "Tabel Capaian Kas Anggota",
+          "features": [
+            "Yearly filter (2024, 2025, 2026)",
+            "Monthly grid matrix (Jan - Des) per member",
+            "Status Lunas (Green Badge) / Belum (Red Badge)",
+            "Total kontribusi kas per member with Rp format",
+            "Quick toggle mark paid for admin"
+          ],
+          "test_id": "admin-tab-kas-achievement"
+        }
+      ]
+    },
+    "anggota": {
+      "title": "Direktori Anggota Verianth",
+      "features": [
+        "Grid of Member Cards with customizable role badges (colored borders)",
+        "Profile Auto-populated from email login",
+        "Self-service Edit Profile modal (Members can update avatar, name, WhatsApp number, bio; Role/Jabatan is locked)",
+        "Email is hidden from public view and replaced with WhatsApp click-to-chat button"
+      ]
+    },
+    "target_komunitas": {
+      "title": "Target & Wishlist Komunitas",
+      "image_treatment": "Preserve image natural aspect ratio without cropping, constrained maximum height (max-h-56) with elegant neutral backdrop",
+      "features": [
+        "Goal Card with target title, description, and required cost (Rp)",
+        "Dynamic Progress Bar computed automatically from current community cash balance vs target price (percentage clamped at 100%)",
+        "Admin Action: 'Tandai Sudah Dibeli' toggle badge that switches card to completed archive state",
+        "Add new target goal modal for Admin"
+      ]
+    },
+    "agenda": {
+      "title": "Agenda & Jadwal Kegiatan",
+      "features": [
+        "Calendar Picker component to select & filter dates",
+        "Agenda list cards with time, location (Online/Gmeet or Offline), description",
+        "Event Category pill (Event Kas, Workshop, Project Meeting, Gathering)",
+        "RSVP / Hadir button for members with avatar participant count",
+        "Admin Add/Edit agenda modal"
+      ]
+    },
+    "masukan": {
+      "title": "Kotak Masukan & Aspirasi",
+      "features": [
+        "Feedback submission form with 'Kirim Sebagai Anonim' toggle switch",
+        "Category selector (Saran Fitur, Kas & Keuangan, Event, Kritik)",
+        "Community feedback stream with status badges ('Menunggu Respon', 'Ditinjau', 'Selesai')",
+        "Admin inline reply thread visible to community"
+      ]
+    }
+  },
+  "role_badge_design_system": {
+    "spec": "Role badges use custom border colors configured in Ruang Admin while keeping subtle translucent background of that same hue",
+    "examples": {
+      "Ketua": { "border": "#2cc0ff", "bg": "rgba(44, 192, 255, 0.12)", "text": "#2cc0ff" },
+      "Bendahara": { "border": "#10b981", "bg": "rgba(16, 185, 129, 0.12)", "text": "#10b981" },
+      "Sekretaris": { "border": "#a855f7", "bg": "rgba(168, 85, 247, 0.12)", "text": "#a855f7" },
+      "Member": { "border": "#64748b", "bg": "rgba(100, 116, 139, 0.12)", "text": "#94a3b8" },
+      "APP": { "border": "#f43f5e", "bg": "rgba(244, 63, 94, 0.15)", "text": "#f43f5e", "special": "Hidden System Role" }
+    }
+  },
+  "image_assets": {
+    "community_workspaces": [
+      {
+        "url": "https://images.unsplash.com/photo-1522071820081-009f0129c71c?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjAxODF8MHwxfHNlYXJjaHwxfHxtb2Rlcm4lMjB0ZWNoJTIwd29ya3NwYWNlJTIwdGVhbXxlbnwwfHx8fDE3ODQxNzMxNjV8MA&ixlib=rb-4.1.0&q=85",
+        "description": "Tech team collaborating on laptops around workspace table",
+        "category": "Hero & Community Overview Banner"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1603201667141-5a2d4c673378?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjAxODF8MHwxfHNlYXJjaHwzfHxtb2Rlcm4lMjB0ZWNoJTIwd29ya3NwYWNlJTIwdGVhbXxlbnwwfHx8fDE3ODQxNzMxNjV8MA&ixlib=rb-4.1.0&q=85",
+        "description": "Creative community members collaborating closely",
+        "category": "About & Member Spotlight"
+      }
+    ],
+    "community_events": [
+      {
+        "url": "https://images.unsplash.com/photo-1515187029135-18ee286d815b?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA1ODR8MHwxfHNlYXJjaHwxfHxjb21tdW5pdHklMjBldmVudCUyMG1lZXQlMjB1cCUyMGRpc2N1c3Npb258ZW58MHx8fHwxNzg3ODMxODMwfDA&ixlib=rb-4.1.0&q=85",
+        "description": "Community meetup and interactive panel discussion",
+        "category": "Agenda & Event Highlights"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1515168833906-d2a3b82b302a?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA1ODR8MHwxfHNlYXJjaHwzfHxjb21tdW5pdHklMjBldmVudCUyMG1lZXQlMjB1cCUyMGRpc2N1c3Npb258ZW58MHx8fHwxNzg3ODMxODMwfDA&ixlib=rb-4.1.0&q=85",
+        "description": "Evening community gathering and talk session",
+        "category": "Agenda Detail View"
+      }
+    ],
+    "community_target_gear": [
+      {
+        "url": "https://images.unsplash.com/photo-1660631228116-b3643559f611?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA1NTN8MHwxfHNlYXJjaHwxfHxjYW1lcmElMjBwb2RjYXN0JTIwZXF1aXBtZW50JTIwbWljcm9waG9uZXxlbnwwfHx8fDE3ODc4MzE4Mzd8MA&ixlib=rb-4.1.0&q=85",
+        "description": "Black studio condenser microphone with boom arm for podcast studio",
+        "category": "Target Komunitas Wishlist Item #1 (Studio Microphone Shure SM7B)"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1615458318132-1f151a3d18f4?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA1NTN8MHwxfHNlYXJjaHwyfHxjYW1lcmElMjBwb2RjYXN0JTIwZXF1aXBtZW50JTIwbWljcm9waG9uZXxlbnwwfHx8fDE3ODc4MzE4Mzd8MA&ixlib=rb-4.1.0&q=85",
+        "description": "Professional audio mixer and broadcast stream deck",
+        "category": "Target Komunitas Wishlist Item #2 (Audio Mixer & Stream Deck)"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1668605335684-c97ce92cbd76?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA1NTN8MHwxfHNlYXJjaHwzfHxjYW1lcmElMjBwb2RjYXN0JTIwZXF1aXBtZW50JTIwbWljcm9waG9uZXxlbnwwfHx8fDE3ODc4MzE4Mzd8MA&ixlib=rb-4.1.0&q=85",
+        "description": "Podcast workstation gear and streaming laptop setup",
+        "category": "Target Komunitas Wishlist Item #3 (High-end Streaming Rig)"
+      }
+    ]
+  },
+  "micro_interactions_and_motion": {
+    "sidebar_hover": "transform: none; transition: background-color 0.15s ease, color 0.15s ease",
+    "sidebar_active_spring": "cubic-bezier(0.34, 1.56, 0.64, 1) scale-100",
+    "card_hover": "hover:border-[#2cc0ff]/40 hover:shadow-[0_8px_30px_rgba(44,192,255,0.12)] transition-all duration-200",
+    "button_press": "active:scale-[0.98] transition-transform duration-100 ease",
+    "modal_backdrop": "backdrop-blur-md bg-black/60 transition-opacity duration-200",
+    "chart_tooltip": "custom styled crystal tooltip with dark surface, 1px cyan border, and JetBrains Mono currency values"
+  },
+  "accessibility_and_contrast": {
+    "wcag_compliance": "WCAG 2.1 AA & APCA standards with minimum 4.5:1 text contrast",
+    "aqua_button_text": "Primary button in #2cc0ff MUST use dark obsidian text (#04111d) for optimal 12.8:1 APCA contrast",
+    "input_focus_state": "focus:ring-2 focus:ring-[#2cc0ff] focus:border-[#2cc0ff] outline-none transition-all",
+    "touch_targets": "Minimum 44x44px for all mobile interactive elements"
+  },
+  "test_id_conventions": {
+    "sidebar": {
+      "nav_admin": "nav-item-admin",
+      "nav_dashboard": "nav-item-dashboard",
+      "nav_keuangan": "nav-item-keuangan",
+      "nav_pengumuman": "nav-item-pengumuman",
+      "nav_anggota": "nav-item-anggota",
+      "nav_target": "nav-item-target",
+      "nav_agenda": "nav-item-agenda",
+      "nav_masukan": "nav-item-masukan",
+      "bottom_note": "sidebar-admin-note",
+      "logout_button": "sidebar-logout-button"
+    },
+    "header": {
+      "theme_toggle": "header-theme-toggle-button",
+      "notifications": "header-notifications-button",
+      "profile_menu": "header-user-profile-menu",
+      "tagline": "header-community-tagline"
+    },
+    "keuangan": {
+      "add_transaction_btn": "finance-add-record-button",
+      "amount_input": "finance-amount-input",
+      "category_select": "finance-category-select",
+      "line_chart": "finance-trend-line-chart",
+      "donut_income": "finance-income-donut-chart",
+      "donut_expense": "finance-expense-donut-chart"
+    },
+    "admin": {
+      "tab_settings": "admin-tab-settings-trigger",
+      "tab_roles": "admin-tab-roles-trigger",
+      "tab_verification": "admin-tab-verification-trigger",
+      "tab_kas": "admin-tab-kas-trigger",
+      "save_settings_btn": "admin-save-settings-button",
+      "add_role_btn": "admin-add-role-button",
+      "approve_member_btn": "admin-approve-member-button",
+      "reject_member_btn": "admin-reject-member-button"
+    },
+    "anggota": {
+      "member_card": "member-card-item",
+      "edit_profile_btn": "member-edit-profile-button",
+      "whatsapp_btn": "member-whatsapp-link-button",
+      "role_badge": "member-role-badge"
+    },
+    "target": {
+      "target_card": "community-target-card",
+      "progress_bar": "community-target-progress-bar",
+      "mark_bought_toggle": "community-target-bought-toggle"
+    },
+    "agenda": {
+      "calendar_picker": "agenda-calendar-date-picker",
+      "add_agenda_btn": "agenda-add-event-button",
+      "rsvp_btn": "agenda-rsvp-action-button"
+    },
+    "masukan": {
+      "form_textarea": "feedback-message-textarea",
+      "anon_switch": "feedback-anonymous-switch",
+      "submit_btn": "feedback-submit-button",
+      "reply_input": "feedback-admin-reply-input"
+    }
+  },
+  "instructions_to_main_agent": [
+    "Load Google Fonts 'Outfit', 'Plus Jakarta Sans', and 'JetBrains Mono' in public/index.html or index.css.",
+    "Implement theme switcher supporting 'system', 'light', and 'dark' with persistence in localStorage and class toggle on document.documentElement.",
+    "Use exact primary accent #2cc0ff with modern minimalist solid pill for the active sidebar item.",
+    "Format all currency display and real-time inputs as Rp with dot grouping (e.g. Rp1.000.000).",
+    "Keep target goal image dimensions natural (use object-contain / object-cover with max-h-56) to ensure pictures are never awkwardly cropped.",
+    "Implement the 4 admin tabs with complete functionality: Website Settings (community name, header tagline, bottom sidebar note), Role Management (with color picker & protected APP role), Member Verification, and Yearly Member Kas Matrix.",
+    "Replace email on Member Directory cards with a WhatsApp shortcut button with phone number formatting.",
+    "Ensure all interactive items include the specified data-testid attributes for E2E testing reliability."
+  ],
+  "UNIVERSAL GUIDELINES FOR MAIN AGENT": [
+    "Never use generic default Inter or Roboto for headings. Use Outfit or Plus Jakarta Sans.",
+    "Never use pure transparent backgrounds for headers, dropdowns, or modals. Use crystal glass with backdrop blur and minimum 70% opacity.",
+    "Do not apply global 'transition: all' to avoid layout jumping; specify exact transition properties (opacity, transform, background-color).",
+    "Always use the designated category color mappings in Recharts for expenses (Langganan: #3b82f6, Target: #ef4444, Event: #10b981, Lainnya: #f59e0b) and income (Kas: #2cc0ff, Support: #a855f7, Hasil Project: #06b6d4, Lainnya: #64748b).",
+    "Use Sonner for toast notifications across transactions, approvals, profile saves, and feedback actions."
+  ]
+}
