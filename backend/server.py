@@ -36,6 +36,8 @@ class User(BaseModel):
     bio: Optional[str] = ""
     whatsapp: Optional[str] = ""
     social: Optional[str] = ""
+    whatsapp_cc: Optional[str] = "+62"
+    socials: list = []
     role: str = "Anggota"
     verified: bool = False
     hidden: bool = False  # APP role hidden
@@ -48,6 +50,8 @@ class ProfileUpdate(BaseModel):
     bio: Optional[str] = None
     whatsapp: Optional[str] = None
     social: Optional[str] = None
+    whatsapp_cc: Optional[str] = None
+    socials: Optional[list] = None
 
 class Role(BaseModel):
     role_id: str
@@ -189,6 +193,7 @@ async def process_session(request: Request, response: Response):
         doc = {
             "user_id": user_id, "email": email, "name": name, "picture": picture,
             "code_name": "", "bio": "", "whatsapp": "", "social": "",
+            "whatsapp_cc": "+62", "socials": [],
             "role": "Admin" if is_owner else "Anggota",
             "verified": is_owner, "hidden": False,
             "created_at": now_utc().isoformat(),

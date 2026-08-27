@@ -26,6 +26,13 @@ Portal komunitas Verianth dengan tema light/dark, aksen aqua (#2cc0ff). Login Go
 - **Layout diremodel**: header halaman diperkecil (text-2xl/3xl bold, tanpa ikon besar), brand "VERIANTH" uppercase di sidebar, topbar minimal dengan tagline uppercase letter-spaced.
 - **Akun uji "Hizki Admin" dihapus** dari DB (duplikat email owner); database users kembali bersih.
 
+## Iteration 3 (Feb 2026) — Redesign Halaman Anggota
+- **Kartu anggota baru** (clean ala Cloudflare): avatar, nama + badge verified aqua, code name, WhatsApp sebagai link wa.me, ikon medsos clickable, badge jabatan warna custom, bio, tombol edit (pensil) hanya di kartu milik sendiri.
+- **WhatsApp dengan kode negara**: picker ~70 negara lengkap dengan bendera (default +62), nomor lokal otomatis distrip "0" depan saat jadi link wa.me.
+- **Media sosial multi-platform**: Instagram, TikTok (ikon custom), Facebook, YouTube, X/Twitter, Discord, Lainnya — bisa tambah lebih dari satu, ikon aplikasi di kartu anggota, auto-normalize username → URL.
+- Backend: field baru `whatsapp_cc` & `socials` di user + ProfileUpdate.
+- Helper baru: `/app/frontend/src/lib/social.js` (COUNTRIES, PLATFORMS, waNumber, socialUrl, TikTokIcon).
+
 ## Backlog
 - **P1**: Upload gambar ke object storage (saat ini base64 di MongoDB), notifikasi pending verifikasi, ekspor kas CSV/PDF.
 - **P2**: Search/filter Anggota, RSVP agenda, paginasi transaksi.
