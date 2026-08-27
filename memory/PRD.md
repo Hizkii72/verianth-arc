@@ -21,6 +21,11 @@ Portal komunitas Verianth dengan tema light/dark, aksen aqua (#2cc0ff). Login Go
 - Frontend: React 19 + Tailwind + Shadcn UI + Recharts + Sonner. Context: `/app/frontend/src/context/AppContext.js`.
 - Test credentials: `/app/memory/test_credentials.md`.
 
+## Iteration 2 (Feb 2026) — Redesign Sidebar & Cleanup
+- **Sidebar minimalis baru**: indikator bar aqua di kiri item aktif (tanpa pill), ikon aqua saat aktif, bisa di-collapse jadi icon-only (persist via localStorage `sidebar_collapsed`), drawer mobile dengan hamburger.
+- **Layout diremodel**: header halaman diperkecil (text-2xl/3xl bold, tanpa ikon besar), brand "VERIANTH" uppercase di sidebar, topbar minimal dengan tagline uppercase letter-spaced.
+- **Akun uji "Hizki Admin" dihapus** dari DB (duplikat email owner); database users kembali bersih.
+
 ## Backlog
 - **P1**: Upload gambar ke object storage (saat ini base64 di MongoDB), notifikasi pending verifikasi, ekspor kas CSV/PDF.
 - **P2**: Search/filter Anggota, RSVP agenda, paginasi transaksi.

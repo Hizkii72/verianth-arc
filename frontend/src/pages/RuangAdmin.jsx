@@ -21,7 +21,7 @@ export default function RuangAdmin() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="font-heading text-3xl sm:text-4xl font-extrabold flex items-center gap-2"><ShieldAlert /> Ruang Admin</h1>
+        <h1 className="font-heading text-2xl sm:text-3xl font-bold tracking-tight">Ruang Admin</h1>
         <p className="text-sm text-muted-foreground">Khusus admin — pengaturan, verifikasi & pencatatan kas anggota</p>
       </div>
       <div className="flex gap-2 flex-wrap">

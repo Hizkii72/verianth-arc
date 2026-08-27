@@ -17,7 +17,7 @@ export default function Anggota() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="font-heading text-3xl sm:text-4xl font-extrabold flex items-center gap-2"><Users /> Anggota</h1>
+        <h1 className="font-heading text-2xl sm:text-3xl font-bold tracking-tight">Anggota</h1>
         <p className="text-sm text-muted-foreground">Daftar anggota komunitas Verianth</p>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">

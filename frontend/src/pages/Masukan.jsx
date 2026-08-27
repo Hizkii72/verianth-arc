@@ -33,7 +33,7 @@ export default function Masukan() {
     <div className="space-y-6">
       <div className="flex items-start justify-between flex-wrap gap-3">
         <div>
-          <h1 className="font-heading text-3xl sm:text-4xl font-extrabold flex items-center gap-2"><MessageSquareQuote /> Masukan & Saran</h1>
+          <h1 className="font-heading text-2xl sm:text-3xl font-bold tracking-tight">Masukan & Saran</h1>
           <p className="text-sm text-muted-foreground">Sampaikan masukan untuk komunitas</p>
         </div>
         <button onClick={() => setModal(true)} data-testid="feedback-open-btn" className="aqua-btn rounded-xl px-4 py-2 flex items-center gap-2 text-sm"><Plus size={16} /> Beri Masukan</button>

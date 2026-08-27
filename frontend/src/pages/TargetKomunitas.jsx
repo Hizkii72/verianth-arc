@@ -40,7 +40,7 @@ export default function TargetKomunitas() {
     <div className="space-y-6">
       <div className="flex items-start justify-between flex-wrap gap-3">
         <div>
-          <h1 className="font-heading text-3xl sm:text-4xl font-extrabold flex items-center gap-2"><TargetIcon /> Target Komunitas</h1>
+          <h1 className="font-heading text-2xl sm:text-3xl font-bold tracking-tight">Target Komunitas</h1>
           <p className="text-sm text-muted-foreground">Target pembelian komunitas & progres capaian</p>
         </div>
         <div className="flex items-center gap-3">
