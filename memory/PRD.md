@@ -33,6 +33,12 @@ Portal komunitas Verianth dengan tema light/dark, aksen aqua (#2cc0ff). Login Go
 - Backend: field baru `whatsapp_cc` & `socials` di user + ProfileUpdate.
 - Helper baru: `/app/frontend/src/lib/social.js` (COUNTRIES, PLATFORMS, waNumber, socialUrl, TikTokIcon).
 
+## Iteration 4 (Jun 2026) — Ruang Personal, Role Terkunci, Agenda→Pengumuman
+- **Ruang Personal** (`/personal`, menu di bawah Ruang Admin, semua member): ruang privat per user. 5 tab: Catatan (pin/edit/hapus), Pengingat (tanggal+jam, status terlewat/hari ini/selesai), Tabungan (pos + target + riwayat setor/tarik + progress), Target Pribadi (checklist langkah, progress %), Keuangan Pribadi (masuk/keluar, saldo, filter bulan). Backend generik `GET/POST/PUT/DELETE /api/personal/{kind}` (kind: notes/reminders/savings/goals/finance), koleksi `personal`, ter-scope ketat `user_id`. Hook `/app/frontend/src/lib/personal.js`, komponen di `/app/frontend/src/components/personal/`.
+- **Role terkunci 4**: Leader (#facc15, admin), Admin (#ef4444, admin), APP (#a855f7, admin, tersembunyi), Member (#2cc0ff). `FIXED_ROLES` di server.py; bootstrap memaksa set role & migrasi user `Anggota`→`Member`; role CRUD endpoint dihapus; tab Role di Ruang Admin dihapus; `PUT /members/{id}/role` validasi nama role.
+- **Agenda digabung ke Pengumuman**: kategori `Agenda` + field `location`; kartu agenda tampil dengan kotak tanggal & lokasi. Endpoint `/agendas` & halaman Agenda dihapus; agenda lama dimigrasi otomatis ke announcements.
+- Testing: `/app/test_reports/iteration_2.json` — 15/15 backend + seluruh alur frontend lulus.
+
 ## Backlog
 - **P1**: Upload gambar ke object storage (saat ini base64 di MongoDB), notifikasi pending verifikasi, ekspor kas CSV/PDF.
 - **P2**: Search/filter Anggota, RSVP agenda, paginasi transaksi.

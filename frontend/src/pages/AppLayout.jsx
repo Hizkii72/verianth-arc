@@ -1,17 +1,17 @@
 import { Outlet, NavLink } from "react-router-dom";
 import { useApp } from "../context/AppContext";
-import { ShieldAlert, LayoutDashboard, WalletCards, Megaphone, Users, Target, CalendarDays, MessageSquareQuote, LogOut, Sun, Moon, Sparkles, PanelLeftClose, PanelLeft, Menu, X, UserCircle2 } from "lucide-react";
+import { ShieldAlert, LayoutDashboard, WalletCards, Megaphone, Users, Target, Lock, MessageSquareQuote, LogOut, Sun, Moon, Sparkles, PanelLeftClose, PanelLeft, Menu, X, UserCircle2 } from "lucide-react";
 import { useState, useEffect } from "react";
 import ProfileDialog from "../components/ProfileDialog";
 
 const NAV = [
   { to: "/admin", label: "Ruang Admin", icon: ShieldAlert, adminOnly: true, testId: "nav-item-admin" },
+  { to: "/personal", label: "Ruang Personal", icon: Lock, testId: "nav-item-personal" },
   { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard, testId: "nav-item-dashboard" },
   { to: "/keuangan", label: "Keuangan", icon: WalletCards, testId: "nav-item-keuangan" },
   { to: "/pengumuman", label: "Pengumuman", icon: Megaphone, testId: "nav-item-pengumuman" },
   { to: "/anggota", label: "Anggota", icon: Users, testId: "nav-item-anggota" },
   { to: "/target", label: "Target Komunitas", icon: Target, testId: "nav-item-target" },
-  { to: "/agenda", label: "Agenda", icon: CalendarDays, testId: "nav-item-agenda" },
   { to: "/masukan", label: "Masukan", icon: MessageSquareQuote, testId: "nav-item-masukan" },
 ];
 

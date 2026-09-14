@@ -16,6 +16,13 @@ client = AsyncIOMotorClient(mongo_url)
 db = client[os.environ['DB_NAME']]
 
 OWNER_EMAIL = "kazekihizki1472@gmail.com"
+FIXED_ROLES = [
+    {"name": "Leader", "color": "#facc15", "is_admin": True, "hidden": False, "system": True},
+    {"name": "Admin", "color": "#ef4444", "is_admin": True, "hidden": False, "system": True},
+    {"name": "APP", "color": "#a855f7", "is_admin": True, "hidden": True, "system": True},
+    {"name": "Member", "color": "#2cc0ff", "is_admin": False, "hidden": False, "system": True},
+]
+PERSONAL_KINDS = {"notes", "reminders", "savings", "goals", "finance"}
 
 app = FastAPI()
 api_router = APIRouter(prefix="/api")
@@ -38,7 +45,7 @@ class User(BaseModel):
     social: Optional[str] = ""
     whatsapp_cc: Optional[str] = "+62"
     socials: list = []
-    role: str = "Anggota"
+    role: str = "Member"
     verified: bool = False
     hidden: bool = False  # APP role hidden
     created_at: str = Field(default_factory=lambda: now_utc().isoformat())
@@ -194,7 +201,7 @@ async def process_session(request: Request, response: Response):
             "user_id": user_id, "email": email, "name": name, "picture": picture,
             "code_name": "", "bio": "", "whatsapp": "", "social": "",
             "whatsapp_cc": "+62", "socials": [],
-            "role": "Admin" if is_owner else "Anggota",
+            "role": "Admin" if is_owner else "Member",
             "verified": is_owner, "hidden": False,
             "created_at": now_utc().isoformat(),
         }
@@ -236,14 +243,20 @@ async def bootstrap():
             "logo": "",
             "sidebar_note": "",
         })
-    if await db.roles.count_documents({}) == 0:
-        defaults = [
-            {"role_id": new_id("role"), "name": "Admin", "color": "#facc15", "is_admin": True, "hidden": False, "system": True},
-            {"role_id": new_id("role"), "name": "APP", "color": "#a855f7", "is_admin": True, "hidden": True, "system": True},
-            {"role_id": new_id("role"), "name": "Anggota", "color": "#2cc0ff", "is_admin": False, "hidden": False, "system": True},
-            {"role_id": new_id("role"), "name": "Leader", "color": "#f97316", "is_admin": False, "hidden": False, "system": False},
-        ]
-        await db.roles.insert_many(defaults)
+    # Locked role set
+    await db.roles.delete_many({"name": {"$nin": [r["name"] for r in FIXED_ROLES]}})
+    for r in FIXED_ROLES:
+        await db.roles.update_one({"name": r["name"]}, {"$set": r, "$setOnInsert": {"role_id": new_id("role")}}, upsert=True)
+    fixed_names = [r["name"] for r in FIXED_ROLES]
+    await db.users.update_many({"role": "Anggota"}, {"$set": {"role": "Member"}})
+    await db.users.update_many({"role": {"$nin": fixed_names}}, {"$set": {"role": "Member"}})
+    # Merge legacy agendas into announcements
+    async for ag in db.agendas.find({}, {"_id": 0}):
+        await db.announcements.insert_one({
+            "ann_id": new_id("ann"), "title": ag["title"], "content": ag.get("description", ""),
+            "category": "Agenda", "date": ag["date"], "location": ag.get("location", ""), "created_by": "",
+        })
+    await db.agendas.delete_many({})
 
 # ---------- Settings ----------
 @api_router.get("/settings")
@@ -262,41 +275,6 @@ async def list_roles(user=Depends(require_user)):
     roles = await db.roles.find({}, {"_id": 0}).to_list(200)
     return roles
 
-class RoleCreate(BaseModel):
-    name: str
-    color: str = "#2cc0ff"
-    is_admin: bool = False
-    hidden: bool = False
-
-@api_router.post("/roles")
-async def create_role(payload: RoleCreate, admin=Depends(require_admin)):
-    if await db.roles.find_one({"name": payload.name}):
-        raise HTTPException(400, "Role exists")
-    doc = {"role_id": new_id("role"), **payload.model_dump(), "system": False}
-    await db.roles.insert_one(doc)
-    doc.pop("_id", None)
-    return doc
-
-class RoleUpdate(BaseModel):
-    color: Optional[str] = None
-    is_admin: Optional[bool] = None
-    hidden: Optional[bool] = None
-
-@api_router.put("/roles/{role_id}")
-async def update_role(role_id: str, payload: RoleUpdate, admin=Depends(require_admin)):
-    upd = {k: v for k, v in payload.model_dump().items() if v is not None}
-    await db.roles.update_one({"role_id": role_id}, {"$set": upd})
-    return {"ok": True}
-
-@api_router.delete("/roles/{role_id}")
-async def delete_role(role_id: str, admin=Depends(require_admin)):
-    r = await db.roles.find_one({"role_id": role_id}, {"_id": 0})
-    if not r:
-        raise HTTPException(404)
-    if r.get("system"):
-        raise HTTPException(400, "System role")
-    await db.roles.delete_one({"role_id": role_id})
-    return {"ok": True}
 
 # ---------- Members ----------
 @api_router.get("/members")
@@ -325,6 +303,8 @@ class MemberRoleUpdate(BaseModel):
 
 @api_router.put("/members/{user_id}/role")
 async def set_member_role(user_id: str, payload: MemberRoleUpdate, admin=Depends(require_admin)):
+    if payload.role not in [r["name"] for r in FIXED_ROLES]:
+        raise HTTPException(400, "Invalid role")
     await db.users.update_one({"user_id": user_id}, {"$set": {"role": payload.role}})
     return {"ok": True}
 
@@ -388,6 +368,7 @@ class AnnCreate(BaseModel):
     content: str
     category: str = "Normal"
     date: str
+    location: str = ""
 
 @api_router.get("/announcements")
 async def list_ann(user=Depends(require_user)):
@@ -444,27 +425,45 @@ async def del_target(target_id: str, admin=Depends(require_admin)):
     await db.targets.delete_one({"target_id": target_id})
     return {"ok": True}
 
-# ---------- Agenda ----------
-class AgendaCreate(BaseModel):
-    title: str
-    date: str
-    location: str = ""
-    description: str = ""
+# ---------- Personal Space (private per user) ----------
+class PersonalItem(BaseModel):
+    data: dict
 
-@api_router.get("/agendas")
-async def list_agenda(user=Depends(require_user)):
-    return await db.agendas.find({}, {"_id": 0}).sort("date", 1).to_list(500)
+def _kind(kind: str):
+    if kind not in PERSONAL_KINDS:
+        raise HTTPException(404, "Unknown kind")
+    return kind
 
-@api_router.post("/agendas")
-async def create_agenda(payload: AgendaCreate, admin=Depends(require_admin)):
-    doc = {"agenda_id": new_id("ag"), **payload.model_dump()}
-    await db.agendas.insert_one(doc)
+@api_router.get("/personal/{kind}")
+async def list_personal(kind: str, user=Depends(require_user)):
+    _kind(kind)
+    return await db.personal.find({"user_id": user["user_id"], "kind": kind}, {"_id": 0}).sort("created_at", -1).to_list(2000)
+
+@api_router.post("/personal/{kind}")
+async def create_personal(kind: str, payload: PersonalItem, user=Depends(require_user)):
+    _kind(kind)
+    doc = {"item_id": new_id("p"), "user_id": user["user_id"], "kind": kind, **payload.data,
+           "created_at": now_utc().isoformat(), "updated_at": now_utc().isoformat()}
+    await db.personal.insert_one(doc)
     doc.pop("_id", None)
     return doc
 
-@api_router.delete("/agendas/{agenda_id}")
-async def del_agenda(agenda_id: str, admin=Depends(require_admin)):
-    await db.agendas.delete_one({"agenda_id": agenda_id})
+@api_router.put("/personal/{kind}/{item_id}")
+async def update_personal(kind: str, item_id: str, payload: PersonalItem, user=Depends(require_user)):
+    _kind(kind)
+    upd = {k: v for k, v in payload.data.items() if k not in ("item_id", "user_id", "kind", "created_at")}
+    upd["updated_at"] = now_utc().isoformat()
+    res = await db.personal.update_one({"item_id": item_id, "user_id": user["user_id"], "kind": kind}, {"$set": upd})
+    if res.matched_count == 0:
+        raise HTTPException(404, "Not found")
+    return await db.personal.find_one({"item_id": item_id}, {"_id": 0})
+
+@api_router.delete("/personal/{kind}/{item_id}")
+async def delete_personal(kind: str, item_id: str, user=Depends(require_user)):
+    _kind(kind)
+    res = await db.personal.delete_one({"item_id": item_id, "user_id": user["user_id"], "kind": kind})
+    if res.deleted_count == 0:
+        raise HTTPException(404, "Not found")
     return {"ok": True}
 
 # ---------- Feedback ----------

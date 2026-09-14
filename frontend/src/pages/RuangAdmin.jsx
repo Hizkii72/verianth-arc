@@ -6,12 +6,11 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../components/
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
 import { Textarea } from "../components/ui/textarea";
-import { ShieldAlert, Settings2, Tags, UserCheck, Table as TableIcon, Trash2, CheckCircle2, Plus, X } from "lucide-react";
+import { ShieldAlert, Settings2, UserCheck, Table as TableIcon, Trash2, CheckCircle2 } from "lucide-react";
 import { toast } from "sonner";
 
 const TABS = [
   { id: "pengaturan", label: "Pengaturan", icon: Settings2 },
-  { id: "role", label: "Role", icon: Tags },
   { id: "verifikasi", label: "Verifikasi Anggota", icon: UserCheck },
   { id: "kas", label: "Capaian Kas Anggota", icon: TableIcon },
 ];
@@ -32,7 +31,6 @@ export default function RuangAdmin() {
         ))}
       </div>
       {tab === "pengaturan" && <PengaturanTab />}
-      {tab === "role" && <RoleTab />}
       {tab === "verifikasi" && <VerifikasiTab />}
       {tab === "kas" && <KasTab />}
     </div>
@@ -61,54 +59,6 @@ function PengaturanTab() {
   );
 }
 
-function RoleTab() {
-  const [roles, setRoles] = useState([]);
-  const [form, setForm] = useState({ name: "", color: "#2cc0ff", is_admin: false, hidden: false });
-  const load = () => api.get("/roles").then(r => setRoles(r.data));
-  useEffect(() => { load(); }, []);
-  const add = async () => {
-    if (!form.name) return toast.error("Nama role wajib");
-    try { await api.post("/roles", form); toast.success("Role ditambahkan"); setForm({ name: "", color: "#2cc0ff", is_admin: false, hidden: false }); load(); }
-    catch { toast.error("Role sudah ada"); }
-  };
-  const del = async (id) => { if (!window.confirm("Hapus role?")) return; try { await api.delete(`/roles/${id}`); load(); } catch { toast.error("Role sistem tidak bisa dihapus"); } };
-  const setAdminFlag = async (r, val) => { await api.put(`/roles/${r.role_id}`, { is_admin: val }); load(); };
-  const setColor = async (r, val) => { await api.put(`/roles/${r.role_id}`, { color: val }); load(); };
-  return (
-    <div className="rounded-2xl border bg-card p-5 space-y-4">
-      <div>
-        <h3 className="font-semibold">Daftar Role</h3>
-        <p className="text-xs text-muted-foreground">Atur role (jabatan), warna border, role tersembunyi, dan akses admin. Role dengan akses admin dapat mengelola seluruh portal.</p>
-      </div>
-      <div className="space-y-2">
-        {roles.map(r => (
-          <div key={r.role_id} className="flex items-center justify-between gap-2 p-2 rounded-xl border">
-            <div className="flex items-center gap-3">
-              <RoleBadge role={r.name} color={r.color} />
-              <label className="text-xs flex items-center gap-1">Warna <input type="color" value={r.color} onChange={e => setColor(r, e.target.value)} className="w-8 h-6 rounded" /></label>
-              <label className="text-xs flex items-center gap-1"><input type="checkbox" checked={r.is_admin} onChange={e => setAdminFlag(r, e.target.checked)} /> Akses Admin</label>
-              {r.hidden && <span className="text-[10px] px-1.5 py-0.5 rounded bg-secondary">Tersembunyi</span>}
-            </div>
-            {!r.system && <button onClick={() => del(r.role_id)} className="text-rose-500 p-1 hover:bg-secondary rounded"><Trash2 size={14} /></button>}
-          </div>
-        ))}
-      </div>
-      <div className="pt-4 border-t space-y-3">
-        <h4 className="font-semibold text-sm">Tambah Role Baru</h4>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-3 items-end">
-          <div><Label>Nama Role</Label><Input value={form.name} onChange={e => setForm(s => ({ ...s, name: e.target.value }))} placeholder="cth: Moderator" data-testid="admin-new-role-name" /></div>
-          <div><Label>Warna</Label><input type="color" value={form.color} onChange={e => setForm(s => ({ ...s, color: e.target.value }))} className="w-full h-9 rounded-md border" /></div>
-          <div className="flex items-center gap-3 flex-wrap text-xs">
-            <label className="flex items-center gap-1"><input type="checkbox" checked={form.hidden} onChange={e => setForm(s => ({ ...s, hidden: e.target.checked }))} /> Sembunyikan</label>
-            <label className="flex items-center gap-1"><input type="checkbox" checked={form.is_admin} onChange={e => setForm(s => ({ ...s, is_admin: e.target.checked }))} /> Akses Admin</label>
-            <button onClick={add} data-testid="admin-add-role-button" className="aqua-btn rounded-lg px-3 py-2 text-xs flex items-center gap-1"><Plus size={14} /> Tambah</button>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
 function VerifikasiTab() {
   const [members, setMembers] = useState([]);
   const [roles, setRoles] = useState([]);
@@ -122,7 +72,7 @@ function VerifikasiTab() {
     <div className="rounded-2xl border bg-card p-5 space-y-4">
       <div>
         <h3 className="font-semibold">Verifikasi Anggota</h3>
-        <p className="text-xs text-muted-foreground">Verifikasi anggota untuk mencegah kepemilikan akun ganda, dan atur jabatan.</p>
+        <p className="text-xs text-muted-foreground">Verifikasi anggota untuk mencegah kepemilikan akun ganda, dan atur jabatan. Role tersedia: Leader, Admin, APP (tersembunyi), Member.</p>
       </div>
       <div className="space-y-2">
         {members.map(m => (
@@ -132,7 +82,7 @@ function VerifikasiTab() {
               <div className="font-semibold text-sm truncate">{m.name}</div>
               <div className="text-xs text-muted-foreground truncate">{m.email}</div>
             </div>
-            <select value={m.role} onChange={e => setRole(m.user_id, e.target.value)} className="h-8 rounded-md border bg-background px-2 text-xs">
+            <select value={m.role} onChange={e => setRole(m.user_id, e.target.value)} data-testid="admin-member-role-select" className="h-8 rounded-md border bg-background px-2 text-xs">
               {roles.map(r => <option key={r.role_id} value={r.name}>{r.name}{r.hidden ? " (tersembunyi)" : ""}</option>)}
             </select>
             <RoleBadge role={m.role} color={roleColor(m.role)} />

@@ -11,7 +11,7 @@ import Keuangan from "./pages/Keuangan";
 import Pengumuman from "./pages/Pengumuman";
 import Anggota from "./pages/Anggota";
 import TargetKomunitas from "./pages/TargetKomunitas";
-import Agenda from "./pages/Agenda";
+import RuangPersonal from "./pages/RuangPersonal";
 import Masukan from "./pages/Masukan";
 import RuangAdmin from "./pages/RuangAdmin";
 
@@ -36,7 +36,7 @@ function AppRouter() {
         <Route path="/pengumuman" element={<Pengumuman />} />
         <Route path="/anggota" element={<Anggota />} />
         <Route path="/target" element={<TargetKomunitas />} />
-        <Route path="/agenda" element={<Agenda />} />
+        <Route path="/personal" element={<RuangPersonal />} />
         <Route path="/masukan" element={<Masukan />} />
         <Route path="/admin" element={<Protected adminOnly><RuangAdmin /></Protected>} />
       </Route>
