@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useState, useCallback } from "react";
 import { api } from "../lib/api";
+import { translate } from "../lib/i18n";
 
 const AppContext = createContext(null);
 export const useApp = () => useContext(AppContext);
@@ -9,6 +10,13 @@ export function AppProvider({ children }) {
   const [loading, setLoading] = useState(true);
   const [settings, setSettings] = useState({ community_name: "Verianth Universe", tagline: "Portal Komunitas", logo: "", sidebar_note: "" });
   const [theme, setTheme] = useState(() => localStorage.getItem("theme") || "system");
+  const [lang, setLangState] = useState(() => localStorage.getItem("lang") || "id");
+
+  const setLang = useCallback((l) => {
+    localStorage.setItem("lang", l);
+    setLangState(l);
+  }, []);
+  const t = useCallback((key) => translate(lang, key), [lang]);
 
   const applyTheme = useCallback((t) => {
     const root = document.documentElement;
@@ -62,7 +70,7 @@ export function AppProvider({ children }) {
   };
 
   return (
-    <AppContext.Provider value={{ user, setUser, loading, settings, refreshSettings, refreshUser, theme, setTheme, logout }}>
+    <AppContext.Provider value={{ user, setUser, loading, settings, refreshSettings, refreshUser, theme, setTheme, logout, lang, setLang, t }}>
       {children}
     </AppContext.Provider>
   );

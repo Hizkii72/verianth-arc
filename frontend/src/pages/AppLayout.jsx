@@ -1,21 +1,23 @@
 import { Outlet, NavLink } from "react-router-dom";
 import { useApp } from "../context/AppContext";
-import { ShieldAlert, LayoutDashboard, WalletCards, Megaphone, Users, Target, Lock, MessageSquareQuote, LogOut, Sun, Moon, Sparkles, PanelLeftClose, PanelLeft, Menu, X, UserCircle2 } from "lucide-react";
+import { ShieldAlert, LayoutDashboard, WalletCards, Megaphone, Users, Target, Lock, MessageSquareQuote, LogOut, Sun, Moon, Sparkles, PanelLeftClose, PanelLeft, Menu, X, UserCircle2, Languages } from "lucide-react";
 import { useState, useEffect } from "react";
 import ProfileDialog from "../components/ProfileDialog";
+import NotificationBell from "../components/NotificationBell";
 
 const NAV = [
-  { to: "/admin", label: "Ruang Admin", icon: ShieldAlert, adminOnly: true, testId: "nav-item-admin" },
-  { to: "/personal", label: "Ruang Personal", icon: Lock, testId: "nav-item-personal" },
-  { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard, testId: "nav-item-dashboard" },
-  { to: "/keuangan", label: "Keuangan", icon: WalletCards, testId: "nav-item-keuangan" },
-  { to: "/pengumuman", label: "Pengumuman", icon: Megaphone, testId: "nav-item-pengumuman" },
-  { to: "/anggota", label: "Anggota", icon: Users, testId: "nav-item-anggota" },
-  { to: "/target", label: "Target Komunitas", icon: Target, testId: "nav-item-target" },
-  { to: "/masukan", label: "Masukan", icon: MessageSquareQuote, testId: "nav-item-masukan" },
+  { to: "/admin", labelKey: "nav.admin", icon: ShieldAlert, adminOnly: true, testId: "nav-item-admin" },
+  { to: "/personal", labelKey: "nav.personal", icon: Lock, testId: "nav-item-personal" },
+  { to: "/dashboard", labelKey: "nav.dashboard", icon: LayoutDashboard, testId: "nav-item-dashboard" },
+  { to: "/keuangan", labelKey: "nav.keuangan", icon: WalletCards, testId: "nav-item-keuangan" },
+  { to: "/pengumuman", labelKey: "nav.pengumuman", icon: Megaphone, testId: "nav-item-pengumuman" },
+  { to: "/anggota", labelKey: "nav.anggota", icon: Users, testId: "nav-item-anggota" },
+  { to: "/target", labelKey: "nav.target", icon: Target, testId: "nav-item-target" },
+  { to: "/masukan", labelKey: "nav.masukan", icon: MessageSquareQuote, testId: "nav-item-masukan" },
 ];
 
 function NavItems({ items, collapsed, onNavigate }) {
+  const { t } = useApp();
   return (
     <nav className="flex-1 px-2.5 py-3 space-y-0.5 overflow-y-auto">
       {items.map((n) => (
@@ -24,7 +26,7 @@ function NavItems({ items, collapsed, onNavigate }) {
           to={n.to}
           data-testid={n.testId}
           onClick={onNavigate}
-          title={collapsed ? n.label : undefined}
+          title={collapsed ? t(n.labelKey) : undefined}
           className={({ isActive }) =>
             `relative flex items-center gap-3 h-10 rounded-lg text-sm transition-colors ${
               collapsed ? "justify-center px-0" : "px-3"
@@ -47,7 +49,7 @@ function NavItems({ items, collapsed, onNavigate }) {
                 strokeWidth={isActive ? 2.2 : 1.8}
                 className={`shrink-0 transition-colors ${isActive ? "text-[#2cc0ff]" : ""}`}
               />
-              {!collapsed && <span className="truncate">{n.label}</span>}
+              {!collapsed && <span className="truncate">{t(n.labelKey)}</span>}
             </>
           )}
         </NavLink>
@@ -57,11 +59,23 @@ function NavItems({ items, collapsed, onNavigate }) {
 }
 
 function SidebarContent({ items, collapsed, onNavigate, onToggleCollapse, onLogout, isMobile }) {
-  const { settings } = useApp();
+  const { settings, t } = useApp();
   return (
     <div className="flex flex-col h-full">
-      <div className={`flex items-center h-16 border-b ${collapsed ? "justify-center px-2" : "justify-between pl-4 pr-2"}`}>
-        <div className="flex items-center gap-2.5 min-w-0">
+      <div className={`flex items-center h-16 border-b gap-1.5 ${collapsed ? "flex-col justify-center py-2 px-1" : "pl-2 pr-2"}`}>
+        {isMobile ? (
+          <button onClick={onNavigate} className="p-2 rounded-lg hover:bg-secondary text-muted-foreground order-last"><X size={17} /></button>
+        ) : (
+          <button
+            onClick={onToggleCollapse}
+            data-testid={collapsed ? "sidebar-expand-toggle" : "sidebar-collapse-toggle"}
+            title="Sidebar"
+            className="p-2 rounded-lg hover:bg-secondary text-muted-foreground hover:text-foreground transition-colors shrink-0"
+          >
+            {collapsed ? <PanelLeft size={16} /> : <PanelLeftClose size={16} />}
+          </button>
+        )}
+        <div className={`flex items-center gap-2.5 min-w-0 ${collapsed ? "" : "flex-1"}`}>
           {settings.logo ? (
             <img src={settings.logo} alt="logo" className="w-8 h-8 rounded-lg object-cover shrink-0" />
           ) : (
@@ -74,25 +88,11 @@ function SidebarContent({ items, collapsed, onNavigate, onToggleCollapse, onLogo
             </div>
           )}
         </div>
-        {isMobile ? (
-          <button onClick={onNavigate} className="p-2 rounded-lg hover:bg-secondary text-muted-foreground"><X size={17} /></button>
-        ) : (
-          !collapsed && (
-            <button onClick={onToggleCollapse} data-testid="sidebar-collapse-toggle" className="p-2 rounded-lg hover:bg-secondary text-muted-foreground hover:text-foreground transition-colors">
-              <PanelLeftClose size={16} />
-            </button>
-          )
-        )}
       </div>
 
       <NavItems items={items} collapsed={collapsed} onNavigate={onNavigate} />
 
       <div className={`px-2.5 pb-4 space-y-1.5 ${collapsed ? "flex flex-col items-center" : ""}`}>
-        {collapsed && !isMobile && (
-          <button onClick={onToggleCollapse} data-testid="sidebar-expand-toggle" className="w-full flex justify-center p-2.5 rounded-lg text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors">
-            <PanelLeft size={16} />
-          </button>
-        )}
         {settings.sidebar_note ? (
           collapsed ? (
             <div className="p-2" title={settings.sidebar_note}><Sparkles size={15} className="text-[#2cc0ff]" /></div>
@@ -106,11 +106,11 @@ function SidebarContent({ items, collapsed, onNavigate, onToggleCollapse, onLogo
         <button
           onClick={onLogout}
           data-testid="sidebar-logout-button"
-          title={collapsed ? "Keluar" : undefined}
+          title={collapsed ? t("common.logout") : undefined}
           className={`w-full flex items-center gap-3 h-10 rounded-lg text-sm text-muted-foreground hover:text-foreground hover:bg-secondary/60 transition-colors ${collapsed ? "justify-center px-0" : "px-3"}`}
         >
           <LogOut size={17} strokeWidth={1.8} className="shrink-0" />
-          {!collapsed && <span>Keluar</span>}
+          {!collapsed && <span>{t("common.logout")}</span>}
         </button>
       </div>
     </div>
@@ -118,7 +118,7 @@ function SidebarContent({ items, collapsed, onNavigate, onToggleCollapse, onLogo
 }
 
 export default function AppLayout() {
-  const { user, settings, setTheme, logout } = useApp();
+  const { user, settings, setTheme, logout, lang, setLang } = useApp();
   const [profileOpen, setProfileOpen] = useState(false);
   const [collapsed, setCollapsed] = useState(() => localStorage.getItem("sidebar_collapsed") === "1");
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -172,6 +172,16 @@ export default function AppLayout() {
           </button>
           <div className="text-[11px] font-medium text-muted-foreground uppercase tracking-[0.18em] truncate">{settings.tagline}</div>
           <div className="flex-1" />
+          <button
+            onClick={() => setLang(lang === "id" ? "en" : "id")}
+            data-testid="header-language-toggle-button"
+            title={lang === "id" ? "Switch to English" : "Ganti ke Bahasa Indonesia"}
+            className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg hover:bg-secondary text-muted-foreground hover:text-foreground transition-colors"
+          >
+            <Languages size={16} />
+            <span className="text-[11px] font-semibold uppercase tracking-wider">{lang}</span>
+          </button>
+          <NotificationBell />
           <button onClick={toggleTheme} data-testid="header-theme-toggle-button" className="p-2 rounded-lg hover:bg-secondary text-muted-foreground hover:text-foreground transition-colors">
             <Sun size={17} className="hidden dark:block" />
             <Moon size={17} className="dark:hidden" />

@@ -29,7 +29,7 @@ function DateBox({ date }) {
 }
 
 export default function Pengumuman() {
-  const { user } = useApp();
+  const { user, t } = useApp();
   const isAdmin = user?.is_admin;
   const [list, setList] = useState([]);
   const [modal, setModal] = useState(false);
@@ -49,12 +49,12 @@ export default function Pengumuman() {
     <div className="space-y-6">
       <div className="flex items-start justify-between flex-wrap gap-3">
         <div>
-          <h1 className="font-heading text-2xl sm:text-3xl font-bold tracking-tight">Pengumuman</h1>
-          <p className="text-sm text-muted-foreground">Info, berita & agenda kegiatan komunitas</p>
+          <h1 className="font-heading text-2xl sm:text-3xl font-bold tracking-tight">{t("ann.title")}</h1>
+          <p className="text-sm text-muted-foreground">{t("ann.sub")}</p>
         </div>
-        {isAdmin && <button onClick={() => setModal(true)} data-testid="ann-create-btn" className="aqua-btn rounded-xl px-4 py-2 flex items-center gap-2 text-sm"><Plus size={16} /> Buat Pengumuman</button>}
+        {isAdmin && <button onClick={() => setModal(true)} data-testid="ann-create-btn" className="aqua-btn rounded-xl px-4 py-2 flex items-center gap-2 text-sm"><Plus size={16} /> {t("ann.create")}</button>}
       </div>
-      {list.length === 0 ? <div className="rounded-2xl border bg-card p-12 text-center text-sm text-muted-foreground">Belum ada pengumuman</div> :
+      {list.length === 0 ? <div className="rounded-2xl border bg-card p-12 text-center text-sm text-muted-foreground">{t("ann.none")}</div> :
         <div className="space-y-3">
           {list.map(a => {
             const agenda = a.category === "Agenda";

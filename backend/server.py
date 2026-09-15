@@ -99,6 +99,11 @@ class Target(BaseModel):
     image: str = ""
     note: str = ""
     bought: bool = False
+    recurring: bool = False
+    cycle_days: int = 30
+    due_date: str = ""
+    last_paid_date: str = ""
+    payments: list = []
     created_at: str
 
 class Agenda(BaseModel):
@@ -379,7 +384,50 @@ async def create_ann(payload: AnnCreate, admin=Depends(require_admin)):
     doc = {"ann_id": new_id("ann"), **payload.model_dump(), "created_by": admin["user_id"]}
     await db.announcements.insert_one(doc)
     doc.pop("_id", None)
+    await db.notifications.insert_one({
+        "notif_id": new_id("ntf"),
+        "title": payload.title,
+        "body": (payload.content or "")[:200],
+        "category": payload.category,
+        "ref_id": doc["ann_id"],
+        "link": "/pengumuman",
+        "created_at": now_utc().isoformat(),
+    })
     return doc
+
+# ---------- Notifications ----------
+@api_router.get("/notifications")
+async def list_notifications(user=Depends(require_user)):
+    items = await db.notifications.find({}, {"_id": 0}).sort("created_at", -1).to_list(50)
+    seen = user.get("notif_seen_at") or ""
+    unread = sum(1 for i in items if i["created_at"] > seen)
+    for i in items:
+        i["unread"] = i["created_at"] > seen
+    return {"items": items, "unread": unread}
+
+@api_router.post("/notifications/read")
+async def read_notifications(user=Depends(require_user)):
+    await db.users.update_one({"user_id": user["user_id"]}, {"$set": {"notif_seen_at": now_utc().isoformat()}})
+    return {"ok": True}
+
+# ---------- QRIS ----------
+class QrisPayload(BaseModel):
+    qris: str = ""
+
+@api_router.get("/qris")
+async def get_qris(user=Depends(require_user)):
+    s = await db.settings.find_one({}, {"_id": 0}) or {}
+    return {"qris": s.get("qris", ""), "qris_note": s.get("qris_note", "")}
+
+class QrisUpdate(BaseModel):
+    qris: Optional[str] = None
+    qris_note: Optional[str] = None
+
+@api_router.put("/qris")
+async def update_qris(payload: QrisUpdate, admin=Depends(require_admin)):
+    upd = {k: v for k, v in payload.model_dump().items() if v is not None}
+    await db.settings.update_one({}, {"$set": upd}, upsert=True)
+    return {"ok": True}
 
 @api_router.put("/announcements/{ann_id}")
 async def upd_ann(ann_id: str, payload: AnnCreate, admin=Depends(require_admin)):
@@ -397,20 +445,65 @@ class TargetCreate(BaseModel):
     price: int
     image: str = ""
     note: str = ""
+    recurring: bool = False
+    cycle_days: int = 30
+    due_date: str = ""
+
+def _advance_due(due: str, cycle_days: int) -> str:
+    """Roll due date forward while it is more than a day in the past."""
+    d = datetime.fromisoformat(due).date()
+    today = now_utc().date()
+    step = max(1, cycle_days)
+    while today > d:
+        d = d + timedelta(days=step)
+    return d.isoformat()
 
 @api_router.get("/targets")
 async def list_targets(user=Depends(require_user)):
-    return await db.targets.find({}, {"_id": 0}).sort("created_at", -1).to_list(500)
+    targets = await db.targets.find({}, {"_id": 0}).sort("created_at", -1).to_list(500)
+    for t in targets:
+        if t.get("recurring") and t.get("due_date"):
+            nxt = _advance_due(t["due_date"], t.get("cycle_days", 30))
+            if nxt != t["due_date"]:
+                t["due_date"] = nxt
+                await db.targets.update_one({"target_id": t["target_id"]}, {"$set": {"due_date": nxt}})
+    return targets
 
 @api_router.post("/targets")
 async def create_target(payload: TargetCreate, admin=Depends(require_admin)):
+    data = payload.model_dump()
+    if data["recurring"]:
+        data["cycle_days"] = max(1, data["cycle_days"])
+        data["due_date"] = data["due_date"] or (now_utc().date() + timedelta(days=data["cycle_days"])).isoformat()
+    else:
+        data["due_date"] = ""
     doc = {
-        "target_id": new_id("tgt"), **payload.model_dump(),
-        "bought": False, "created_at": now_utc().isoformat(),
+        "target_id": new_id("tgt"), **data,
+        "bought": False, "last_paid_date": "", "payments": [],
+        "created_at": now_utc().isoformat(),
     }
     await db.targets.insert_one(doc)
     doc.pop("_id", None)
     return doc
+
+@api_router.post("/targets/{target_id}/pay")
+async def pay_target(target_id: str, admin=Depends(require_admin)):
+    t = await db.targets.find_one({"target_id": target_id}, {"_id": 0})
+    if not t:
+        raise HTTPException(404, "Not found")
+    if not t.get("recurring"):
+        raise HTTPException(400, "Target is not recurring")
+    today = now_utc().date()
+    cycle = max(1, t.get("cycle_days", 30))
+    cur = datetime.fromisoformat(t["due_date"]).date() if t.get("due_date") else today
+    nxt = cur + timedelta(days=cycle)
+    while nxt <= today:
+        nxt = nxt + timedelta(days=cycle)
+    payments = t.get("payments", []) + [{"paid_on": today.isoformat(), "cycle_due": cur.isoformat()}]
+    await db.targets.update_one({"target_id": target_id}, {"$set": {
+        "due_date": nxt.isoformat(), "last_paid_date": today.isoformat(), "payments": payments[-24:],
+    }})
+    return await db.targets.find_one({"target_id": target_id}, {"_id": 0})
 
 class TargetBought(BaseModel):
     bought: bool

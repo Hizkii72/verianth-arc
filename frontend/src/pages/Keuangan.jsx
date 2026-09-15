@@ -1,13 +1,14 @@
 import { useEffect, useMemo, useState } from "react";
 import { api, formatRupiah, fmtDate } from "../lib/api";
 import { useApp } from "../context/AppContext";
-import { Plus, Pencil, Trash2, WalletCards } from "lucide-react";
+import { Plus, Pencil, Trash2, WalletCards, Download } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../components/ui/dialog";
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
 import { RupiahInput } from "../components/RupiahInput";
 import { toast } from "sonner";
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend, CartesianGrid } from "recharts";
+import QrisCard from "../components/QrisCard";
 
 const IN_CATS = ["Kas", "Support", "Hasil Project", "Lainnya"];
 const OUT_CATS = ["Langganan", "Target", "Event", "Lainnya"];
@@ -15,7 +16,7 @@ const IN_COLORS = { Kas: "#2cc0ff", Support: "#a855f7", "Hasil Project": "#06b6d
 const OUT_COLORS = { Langganan: "#3b82f6", Target: "#ef4444", Event: "#10b981", Lainnya: "#f59e0b" };
 
 export default function Keuangan() {
-  const { user } = useApp();
+  const { user, t } = useApp();
   const isAdmin = user?.is_admin;
   const [tx, setTx] = useState([]);
   const [summary, setSummary] = useState({ saldo: 0, pemasukan: 0, pengeluaran: 0 });
@@ -47,19 +48,33 @@ export default function Keuangan() {
 
   const filtered = tx.filter(t => filter === "all" ? true : t.type === filter);
 
-  // Line chart: by month
+  // Line chart: by day
   const trend = useMemo(() => {
     const map = {};
     tx.forEach(t => {
-      const d = new Date(t.date);
-      const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
-      map[key] = map[key] || { month: key, pemasukan: 0, pengeluaran: 0 };
+      const key = String(t.date).slice(0, 10);
+      map[key] = map[key] || { day: key, pemasukan: 0, pengeluaran: 0 };
       map[key][t.type] += t.amount;
     });
-    return Object.values(map).sort((a, b) => a.month.localeCompare(b.month)).map(x => ({
-      ...x, label: new Date(x.month + "-01").toLocaleDateString("id-ID", { month: "short", year: "2-digit" })
+    return Object.values(map).sort((a, b) => a.day.localeCompare(b.day)).map(x => ({
+      ...x, label: new Date(x.day).toLocaleDateString("id-ID", { day: "numeric", month: "short" })
     }));
   }, [tx]);
+
+  const exportCsv = () => {
+    if (filtered.length === 0) return toast.error(t("fin.noTx"));
+    const head = [t("fin.date"), "Tipe/Type", t("fin.category"), t("fin.desc"), t("fin.amount")];
+    const esc = (v) => `"${String(v ?? "").replace(/"/g, '""')}"`;
+    const rows = filtered.map(r => [r.date, r.type, r.category, r.note || "", r.amount].map(esc).join(","));
+    const csv = "\uFEFF" + [head.map(esc).join(","), ...rows].join("\r\n");
+    const url = URL.createObjectURL(new Blob([csv], { type: "text/csv;charset=utf-8;" }));
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `keuangan-${filter}-${new Date().toISOString().slice(0, 10)}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+    toast.success("CSV " + t("common.download").toLowerCase());
+  };
 
   const donutIn = useMemo(() => IN_CATS.map(c => ({ name: c, value: tx.filter(t => t.type === "pemasukan" && t.category === c).reduce((s, t) => s + t.amount, 0) })).filter(x => x.value > 0), [tx]);
   const donutOut = useMemo(() => OUT_CATS.map(c => ({ name: c, value: tx.filter(t => t.type === "pengeluaran" && t.category === c).reduce((s, t) => s + t.amount, 0) })).filter(x => x.value > 0), [tx]);
@@ -68,10 +83,15 @@ export default function Keuangan() {
     <div className="space-y-8">
       <div className="flex items-start justify-between flex-wrap gap-3">
         <div>
-          <h1 className="font-heading text-2xl sm:text-3xl font-bold tracking-tight">Keuangan Komunitas</h1>
-          <p className="text-sm text-muted-foreground mt-1">Catat pemasukan & pengeluaran kas</p>
+          <h1 className="font-heading text-2xl sm:text-3xl font-bold tracking-tight">{t("fin.title")}</h1>
+          <p className="text-sm text-muted-foreground mt-1">{t("fin.sub")}</p>
         </div>
-        {isAdmin && <button onClick={openAdd} data-testid="finance-add-record-button" className="aqua-btn rounded-xl px-4 py-2 flex items-center gap-2 text-sm"><Plus size={16} /> Tambah Transaksi</button>}
+        <div className="flex items-center gap-2">
+          <button onClick={exportCsv} data-testid="finance-export-csv-button" className="rounded-xl border px-4 py-2 flex items-center gap-2 text-sm hover:bg-secondary transition-colors">
+            <Download size={16} /> {t("fin.export")}
+          </button>
+          {isAdmin && <button onClick={openAdd} data-testid="finance-add-record-button" className="aqua-btn rounded-xl px-4 py-2 flex items-center gap-2 text-sm"><Plus size={16} /> {t("fin.addTx")}</button>}
+        </div>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -81,7 +101,7 @@ export default function Keuangan() {
       </div>
 
       <div className="rounded-2xl border bg-card p-5">
-        <h3 className="font-semibold mb-3">Tren Pemasukan vs Pengeluaran</h3>
+        <h3 className="font-semibold mb-3">{t("fin.trend")}</h3>
         {trend.length === 0 ? <div className="h-56 flex items-center justify-center text-sm text-muted-foreground">Belum ada data</div> :
           <ResponsiveContainer width="100%" height={260} data-testid="finance-trend-line-chart">
             <LineChart data={trend}>
@@ -97,9 +117,11 @@ export default function Keuangan() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <DonutCard title="Pemasukan per Kategori" data={donutIn} colors={IN_COLORS} testId="finance-income-donut-chart" />
-        <DonutCard title="Pengeluaran per Kategori" data={donutOut} colors={OUT_COLORS} testId="finance-expense-donut-chart" />
+        <DonutCard title={t("fin.donutIn")} data={donutIn} colors={IN_COLORS} testId="finance-income-donut-chart" />
+        <DonutCard title={t("fin.donutOut")} data={donutOut} colors={OUT_COLORS} testId="finance-expense-donut-chart" />
       </div>
+
+      <QrisCard manageable={isAdmin} />
 
       <div>
         <div className="flex gap-2 mb-3">
